@@ -80,7 +80,10 @@ Again, the Actor ID (first long public key) doesn't matter, we use `put_link()` 
 As the `testing` subject is the only one this provider listens on, we can send a request to it, to cause it to
 
 ```console
-nats request testing '{"actor_id": "test", "link_name": "default", "contract_id": "wasmcloud:messaging", "operation": "Echo", "payload_b64": "e30="}'
+nats request testing '{"actor_id": "<replace this with actor id>", "link_name": "default", "contract_id": "wasmcloud:messaging", "operation": "wasmcloud:keyvalue/key-value.contains", "payload_b64": "e30="}'
 ```
 
-NOTE: `e30=` is the base64-encoded body of the payload.
+> [!NOTE]
+> `e30=` is the base64-encoded body of the payload (decodes to `{}`).
+>
+> Clearly that's not valid input for the operation above, but you'll have other problems.
