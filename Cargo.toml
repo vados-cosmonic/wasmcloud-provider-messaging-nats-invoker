@@ -1,0 +1,49 @@
+[package]
+name = "wasmcloud-provider-messaging-nats-invoker"
+version = "0.18.0"
+authors = ["Victor Adossi <vadossi@cosmonic.com>"]
+categories = ["wasm"]
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/vados-cosmonic/wasmcloud-provider-messaging-nats-invoker"
+description = """
+A capability provider that listens to messages on a NATS topic and invokes a configured actor
+"""
+
+[badges.maintenance]
+status = "actively-developed"
+
+[dependencies]
+anyhow = { workspace = true }
+async-nats = { workspace = true }
+base64 = { workspace = true }
+bytes = { workspace = true }
+futures = { workspace = true }
+opentelemetry = { workspace = true }
+opentelemetry-nats = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+tokio = { workspace = true, features = ["full"] }
+tracing = { workspace = true }
+tracing-futures = { workspace = true }
+tracing-opentelemetry = { workspace = true }
+wascap = { workspace = true }
+wasmcloud-provider-wit-bindgen = { workspace = true, features = ["otel", "wrpc"]}
+wasmcloud-core = { workspace = true }
+
+[workspace.dependencies]
+anyhow = { version = "1", default-features = false }
+async-nats = { version = "0.33", default-features = false }
+base64 = { version = "0.21", default-features = false }
+bytes = { version = "1", default-features = false }
+futures = { version = "0.3", default-features = false }
+opentelemetry = { version = "0.21", default-features = false }
+opentelemetry-nats = { version = "0.1", default-features = false }
+tokio = { version = "1", default-features = false }
+serde = { version = "1", default-features = false }
+tracing = { version = "0.1", default-features = false }
+tracing-futures = { version = "0.2", default-features = false }
+tracing-opentelemetry = { version = "0.22", default-features = false }
+wascap = { version = "0.12", default-features = false }
+#wasmcloud-provider-wit-bindgen = { git = "https://github.com/vados-cosmonic/wasmCloud", rev = "f898d02e22b59685bfda3f9bdcaee5530250f8c2", default-features = false }
+wasmcloud-provider-wit-bindgen = { path = "../forks/wasmCloud/crates/provider-wit-bindgen", default-features = false }
+wasmcloud-core = { path = "../forks/wasmCloud/crates/core", default-features = false }

@@ -1,0 +1,6 @@
+package wasmcloud:provider-messaging-nats;
+
+world provider-messaging-nats {
+  // This provider is going to listen as a message subscriber
+  export wasmcloud:messaging/message-subscriber;
+}

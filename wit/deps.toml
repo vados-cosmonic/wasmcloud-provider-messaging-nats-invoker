@@ -1,0 +1,3 @@
+messaging = "external/wasmcloud/messaging"
+wasmcloud = "external/wasmcloud"
+wasi = "external/io"
