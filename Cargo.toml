@@ -44,5 +44,5 @@ tracing = { version = "0.1", default-features = false }
 tracing-futures = { version = "0.2", default-features = false }
 tracing-opentelemetry = { version = "0.22", default-features = false }
 wascap = { version = "0.12", default-features = false }
-wasmcloud-provider-wit-bindgen = { git = "https://github.com/vados-cosmonic/wasmCloud", rev = "f37ea8d7877db108fe8e4ac84b7fc5c434fb8810", default-features = false }
-wasmcloud-core = { git = "https://github.com/vados-cosmonic/wasmCloud", rev = "f37ea8d7877db108fe8e4ac84b7fc5c434fb8810", default-features = false }
+wasmcloud-provider-wit-bindgen = { git = "https://github.com/vados-cosmonic/wasmCloud", rev = "aaf36ee4f260c332aee605a5ca5a30247483e2c8", default-features = false }
+wasmcloud-core = { git = "https://github.com/vados-cosmonic/wasmCloud", rev = "aaf36ee4f260c332aee605a5ca5a30247483e2c8", default-features = false }
