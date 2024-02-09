@@ -1,12 +1,86 @@
-# NATS Capability Provider
-This capability provider is an implementation of the `wasmcloud:messaging` contract. It exposes publish, request, and subscribe functionality to actors.
+# NATS Messaging Invoker Provider
 
-## Link Definition Configuration Settings
-To configure this provider, use the following link settings in link definitions:
+To facilitate testing wRPC, this provider attempts to invoke Actors on the lattice.
 
-| Property | Description |
-| :--- | :--- | 
-| `SUBSCRIPTION` | A comma-separated list of subscription topics. If a subscription is a queue subscription, follow the subscription with "\|" and the queue group name. For example, the setting `SUBSCRIPTION=example.actor,example.task\|work_queue` subscribes to the topic `example.actor` and the topic `example.task` in the queue group `work_queue`. |
-| `URI` | NATS connection uri. If not specified, the default is `0.0.0.0:4222` |
-| `CLIENT_JWT` | Optional JWT auth token. For JWT authentication, both `CLIENT_JWT` and `CLIENT_SEED` must be provided. |
-| `CLIENT_SEED` | Private seed for JWT authentication. |
+This provider:
+- Listens on the NATS subject `testing`  as soon as any link is put
+- When a message comes in on `testing`, it attempts to invoke an actor in the lattice with the received information.
+
+NATS payloads should be of the following shape:
+
+```rust
+struct InvokeMessage {
+    actor_id: String,
+    link_name: String,
+    contract_id: String,
+    operation: String,
+    payload_b64: String,
+}
+```
+
+In JSON, this would look like:
+
+```json
+{
+  "actor_id": "test",
+  "link_name": "default",
+  "contract_id": "wasmcloud:messaging",
+  "operation": "Echo",
+  "payload_b64": "e30="
+}
+```
+
+## Steps to use as test
+
+To use this provider to validate wrpc, you'll need to go through the steps below.
+
+### Step 0: Build this actor
+
+```console
+cargo build
+```
+
+### Step 1: Create a PAR file
+
+```console
+wash par create \
+    --vendor wasmcloud-test \
+    --compress \
+    --arch x86_64-linux \
+    --name messaging_nats_invoker \
+    --capid wasmcloud:messaging \
+    --destination provider.par.gz \
+    --binary target/debug/messaging_nats_invoker
+```
+
+### Step 2: Start a wasmCloud host
+
+```console
+wash up
+```
+
+### Step 3: Start the provider
+
+```console
+wash start provider file:///path/to/your/provider-messaging-nats-invoker/provider.par.gz
+```
+
+Note the public key (`V...`) of the provider
+
+### Step 4: Put a link to a (possibly) non-existent actor with the provider
+
+```console
+wash link put MAUTPVHJHMAVQDLN5424LNOHEUJFMW2HY2VB5BLNKPPOHP4I4MTQX5MF <provider id> wasmcloud:messaging
+```
+
+Again, the Actor ID (first long public key) doesn't matter, we use `put_link()` just to generate.
+
+### Step 5: Send a manual NATS request
+
+As the `testing` subject is the only one this provider listens on, we can send a request to it, to cause it to
+
+```console
+nats request testing '{"actor_id": "test", "link_name": "default", "contract_id": "wasmcloud:messaging", "operation": "Echo", "payload_b64": "e30="}'
+```
+
+NOTE: `e30=` is the base64-encoded body of the payload.
